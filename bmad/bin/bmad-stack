@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STACK_ROOT="${BMAD_STACK_DIR:-/opt/bmad/stacks}"
+EXT_DIR="${CODE_SERVER_EXTENSIONS_DIR:-/opt/code-server/extensions}"
+
+usage() {
+  echo "Usage:"
+  echo "  bmad-stack list"
+  echo "  bmad-stack apply <stack-id> [--dir <path>]"
+  exit 2
+}
+
+cmd="${1:-}"; shift || true
+
+case "$cmd" in
+  list)
+    find "$STACK_ROOT" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
+    ;;
+  apply)
+    stack="${1:-}"; shift || true
+    [ -n "$stack" ] || usage
+
+    target_dir=""
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --dir) target_dir="${2:-}"; shift 2;;
+        *) echo "Unknown arg: $1"; usage;;
+      esac
+    done
+
+    stack_dir="$STACK_ROOT/$stack"
+    [ -d "$stack_dir" ] || { echo "Unknown stack: $stack"; exit 1; }
+
+    if [ -z "$target_dir" ]; then
+      if [ -d ".git" ] || [ -f "package.json" ] || [ -f "pyproject.toml" ] || [ -f "pom.xml" ]; then
+        target_dir="$PWD"
+      else
+        target_dir="$HOME/project"
+        mkdir -p "$target_dir"
+      fi
+    fi
+
+    cfg_src="$stack_dir/mise.toml"
+    cfg_dst="$target_dir/.mise.toml"
+    cp "$cfg_src" "$cfg_dst"
+
+    # Trust + install tools for this project directory
+    mise trust "$cfg_dst" >/dev/null || true
+    (cd "$target_dir" && mise install --yes)
+
+    # Optional: install stack-specific code-server extensions (IDs) listed in extensions.txt
+    if command -v code-server >/dev/null 2>&1 && [ -f "$stack_dir/extensions.txt" ]; then
+      while IFS= read -r ext; do
+        [ -n "$ext" ] || continue
+        if ! code-server --extensions-dir "$EXT_DIR" --list-extensions 2>/dev/null | grep -qi "^${ext}$"; then
+          code-server --extensions-dir "$EXT_DIR" --install-extension "$ext" >/dev/null
+        fi
+      done < "$stack_dir/extensions.txt"
+    fi
+
+    echo "Applied stack '$stack' to: $target_dir"
+    echo "Open a new terminal (or reload shell) so mise activation updates PATH."
+    ;;
+  *)
+    usage
+    ;;
+esac
