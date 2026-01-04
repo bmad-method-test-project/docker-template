@@ -32,6 +32,12 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | b
   && nvm alias default 24 \
   && nvm use default
 
+# Shell activation for nvm in terminals
+RUN echo '' >> /etc/bash.bashrc \
+  && echo '# nvm (Node Version Manager)' >> /etc/bash.bashrc \
+  && echo 'export NVM_DIR="$HOME/.nvm"' >> /etc/bash.bashrc \
+  && echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> /etc/bash.bashrc
+
 # --- Optional: install BMAD CLI globally (v6 alpha example) ---
 # Enable by building with: --build-arg INSTALL_BMAD_CLI=true
 # Pin the CLI version via:  --build-arg BMAD_CLI_VERSION=6.0.0-alpha.15
@@ -50,7 +56,9 @@ RUN install -dm 755 /etc/apt/keyrings \
   && apt-get install -y mise
 
 # Shell activation for terminals
-RUN echo '\n# mise (runtime manager)\nif command -v mise >/dev/null 2>&1; then eval "$(mise activate bash)"; fi\n' >> /etc/bash.bashrc
+RUN echo '' >> /etc/bash.bashrc \
+  && echo '# mise (runtime manager)' >> /etc/bash.bashrc \
+  && echo 'if command -v mise >/dev/null 2>&1; then eval "$(mise activate bash)"; fi' >> /etc/bash.bashrc
 
 # --- BMAD stack tooling (copied in) ---
 ENV BMAD_STACK_DIR=/opt/bmad/stacks
