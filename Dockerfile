@@ -4,7 +4,7 @@ FROM codercom/enterprise-base:ubuntu
 # --- Build arguments ---
 ARG NODE_VERSION=24
 ARG INSTALL_BMAD_CLI=true
-ARG BMAD_CLI_VERSION=6.0.0-alpha.15
+ARG BMAD_CLI_VERSION=latest
 
 # Use bash for the shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -51,16 +51,18 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | b
 RUN echo node > /home/coder/.nvmrc
 RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION"
 
+ENV PROJECT_DIR=/home/coder/project
+RUN mkdir -p ${PROJECT_DIR}
+WORKDIR ${PROJECT_DIR}
+
 # --- Optional: install BMAD CLI globally (v6 alpha example) ---
 # Enable by building with: --build-arg INSTALL_BMAD_CLI=true
 # Pin the CLI version via:  --build-arg BMAD_CLI_VERSION=6.0.0-alpha.15
 RUN if [ "$INSTALL_BMAD_CLI" = "true" ]; then \
     source $NVM_DIR/nvm.sh \
     && npm install -g "bmad-method@${BMAD_CLI_VERSION}" \
+    && bmad install --full --ide vscode --directory .\
     && npm cache clean --force; \
   fi
-
-RUN mkdir -p /home/coder/project
-WORKDIR /home/coder
 
 CMD ["/bin/bash"]
