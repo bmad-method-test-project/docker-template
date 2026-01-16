@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openssh-client \
     build-essential \
     bash \
+    locales \
   && rm -rf /var/lib/apt/lists/*
 
 # --- Install mise (runtime manager) ---
@@ -54,5 +55,10 @@ COPY bmad/bmad-files/ /opt/bmad/bmad-files/
 RUN chmod -R a+rX /opt/bmad/bmad-files
 
 USER coder
+
+ENV LANG de_DE.UTF-8  
+ENV LANGUAGE de_DE:de 
+ENV LC_ALL de_DE.UTF-8     
+
 CMD ["/bin/bash"]
 WORKDIR /home/coder
