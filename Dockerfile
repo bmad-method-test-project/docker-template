@@ -58,11 +58,10 @@ RUN chmod -R a+rX /opt/bmad/stacks
 COPY bmad/bmad-files/ /opt/bmad/bmad-files/
 RUN chmod -R a+rX /opt/bmad/bmad-files
 
+# Set locale to German (de_DE.UTF-8)
+RUN locale-gen de_DE.UTF-8 \
+  && update-locale LANG=de_DE.UTF-8   
+
 USER coder
-
-ENV LANG de_DE.UTF-8  
-ENV LANGUAGE de_DE:de 
-ENV LC_ALL de_DE.UTF-8     
-
 CMD ["/bin/bash"]
 WORKDIR /home/coder
