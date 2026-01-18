@@ -25,7 +25,7 @@ jobs:
 
           - name: 'Build Docker Image'
             run: |
-              docker build . --tag ghcr.io/prosellen/bmad-coder-docker:latest
+              docker build . --platform linux/amd64,linux/arm64 --tag ghcr.io/prosellen/bmad-coder-docker:latest
           
           - name: 'Push Docker Image to GHCR'
             run: |
