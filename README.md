@@ -97,6 +97,24 @@ To add a new development stack:
 4. The main `config/mise.toml` will be updated separately to define global tools
 5. Rebuild the Docker image
 
+## User and Security Configuration
+
+### User ID (UID) Configuration
+
+The Docker image creates a `coder` user with **UID 1001** (and GID 1001).
+
+**Why UID 1001?**
+- The base `ubuntu:latest` image includes an `ubuntu` user with UID 1000
+- To avoid conflicts and permission issues, we use UID 1001 for the `coder` user
+- This UID must match the `run_as_user` and `fs_group` settings in the Coder Template's Kubernetes configuration
+
+**Security Context:**
+- User: `coder` (UID 1001, GID 1001)
+- Home directory: `/home/coder`
+- Sudo access: Enabled with `NOPASSWD` for development convenience
+
+> **Important**: If you modify the UID in the Dockerfile, you must update the corresponding `run_as_user` and `fs_group` values in the Coder Template's `main.tf` file.
+
 ## Dependencies
 
 ### Required Tools
