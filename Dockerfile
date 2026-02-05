@@ -28,6 +28,13 @@ RUN apt-get install -y --no-install-recommends \
     locales
 RUN rm -rf /var/lib/apt/lists/*
 
+# --- Install additional dependencies for building software ---
+# These are needed to build Python from source via mise
+RUN apt-get update && sudo apt-get install -y --no-install-recommends \
+  libssl-dev zlib1g-dev xz-utils libbz2-dev liblzma-dev \
+  libffi-dev libsqlite3-dev lsb-release \
+  && sudo rm -rf /var/lib/apt/lists/*
+
 WORKDIR "/root/"
 
 # --- Create configuration directory ---
