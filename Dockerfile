@@ -2,9 +2,9 @@
 FROM ubuntu:latest
 
 # --- Build arguments ---
-ARG NODE_VERSION=24
-ARG PROJECT_DIR=/home/coder/project
 ARG USER=coder
+ARG USER_HOME_DIR=/home/${USER}
+ARG PROJECT_DIR=/home/${USER}/project
 ARG BMAD_VERSION=6
 
 # Use bash for the shell
@@ -89,9 +89,9 @@ RUN useradd -m --uid=1001 --shell /bin/bash -G sudo ${USER}
 RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USER} \
     && chmod 440 /etc/sudoers.d/${USER}
 # Create project directory for the user
-RUN mkdir -p /home/${USER}/project
+RUN mkdir -p ${PROJECT_DIR}
 # Set ownership of home directory to the user
-RUN chown -R ${USER}:${USER} /home/${USER}
+RUN chown -R ${USER}:${USER} ${USER_HOME_DIR}
 
 # # Let's add a fancy prompt!
 # RUN echo "PS1='CGI BMAD \[\033[1;36m\]\h \[\033[1;34m\]\W\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]'" > /home/${USER}/.bashrc && \
@@ -101,4 +101,4 @@ RUN chown -R ${USER}:${USER} /home/${USER}
 USER ${USER}
 
 # Set working directory
-WORKDIR "/home/${USER}"
+WORKDIR "${USER_HOME_DIR}"
