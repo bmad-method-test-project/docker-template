@@ -56,9 +56,17 @@ RUN echo 'eval "$(/usr/bin/mise activate bash  --shims)"' >> /etc/bash.bash_prof
 # --- Copy in BMAD files to the config directory ---
 # We copy the BMAD stack tooling and files into the config directory so they can be
 # moved into the user's home directory after the PVC is mounted
-# Select BMAD version based on build arg: v4.44.3 or v6.0.0-Beta.7
-COPY bmad/v${BMAD_VERSION}.*/ /usr/local/config/project/
-RUN chmod -R a+rX /usr/local/config/project/
+# Select BMAD version based on build arg: 4 for v4.44.3 or 6 for v6.0.0-Beta.7
+COPY bmad/v4.44.3/ /usr/local/config/bmad-v4/
+COPY bmad/v6.0.0-Beta.7/ /usr/local/config/bmad-v6/
+RUN if [ "$BMAD_VERSION" = "4" ]; then \
+    mv /usr/local/config/bmad-v4 /usr/local/config/project; \
+    rm -rf /usr/local/config/bmad-v6; \
+    elif [ "$BMAD_VERSION" = "6" ]; then \
+    mv /usr/local/config/bmad-v6 /usr/local/config/project; \
+    rm -rf /usr/local/config/bmad-v4; \
+    fi && \
+    chmod -R a+rX /usr/local/config/project/
 
 # --- Copy templating scripts and templates ---
 COPY config/scripts/ /usr/local/config/scripts/
