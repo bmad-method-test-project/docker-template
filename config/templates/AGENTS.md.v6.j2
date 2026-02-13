@@ -17,47 +17,21 @@ If you can not find a corresponding persona activation in the context, please wa
 
 ### Target Maturity Level
 
+The target maturity level chosen by the user for this project is:
 {% if target_maturity_level == 1 -%}
 **Level 1: Concept Demo**
-
-This project is a proof-of-concept or demo intended to validate ideas and explore feasibility. Focus on:
-- Quick iterations and experimentation
-- Core functionality demonstrations
-- Minimal documentation (just enough to understand the concept)
-- Informal code structure acceptable
-- No production-readiness requirements
 {% elif target_maturity_level == 2 -%}
 **Level 2: Working Prototype**
-
-This project is a functional prototype to validate technical approaches. Focus on:
-- Working end-to-end functionality
-- Basic error handling
-- Moderate code quality and structure
-- Essential documentation for handoff
-- Some testing of critical paths
-- Not yet production-ready but demonstrates viability
 {% elif target_maturity_level == 3 -%}
 **Level 3: Releasable Solution**
-
-This project aims to be production-ready for initial release. Focus on:
-- Complete feature implementation
-- Comprehensive error handling
-- Good code quality, maintainability, and structure
-- Full documentation (technical and user)
-- Thorough testing (unit, integration, e2e)
-- Security considerations addressed
-- Deployment readiness
 {% else -%}
 **Level 4: Enterprise-Ready**
-
-This project must meet enterprise standards for production deployment. Focus on:
-- Production-grade implementation
-- Robust error handling and recovery
-- Excellent code quality with architectural patterns
-- Complete documentation suite (technical, operational, user)
-- Comprehensive test coverage with automated testing
-- Security hardening and compliance
-- Monitoring, logging, and observability
-- Scalability and performance optimization
-- Disaster recovery and high availability
 {% endif %}
+
+Keep this maturity level in mind when providing guidance, as it will influence the scope, quality, and focus of the work. Use our maturity framework below to understand the expectations. NOTE: These are not hard criteria but rather orientation and can differ from Use Case to Use Case and can be overriden by the user.
+| Level | Name | Description | What It Demonstrates | Core Characteristics | Orientation |
+|-------|------|-------------|---------------------|----------------------|----------------------|
+| **L1** | **Concept Demo** | Shows vision and value proposition | "Here's the vision" | Demo / Showcase |
+| **L2** | **Working Prototype** | Demonstrates technical feasibility | "The core actually works" | Proof of Concept / Prototype |
+| **L3** | **Releasable Solution** | Ready for deployment and use | "You can actually use this" | MVP |
+| **L4** | **Enterprise-Ready** | Built for maintainability and growth | "This can be maintained and grown" | Production-Ready | 
