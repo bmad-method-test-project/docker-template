@@ -1,5 +1,8 @@
 # BMAD Method Docker Image
 
+> 🚨 DEPRECATED: This repo is now read-only and has been deprecated
+> All project related files have been moved to a monorepo at https://github.com/bmad-method-test-project/bmad-method
+
 ## Overview
 
 This repository contains the Docker image configuration for the **BMAD Method Test Project** at CGI Germany. It provides multi-architecture base images that are consumed by Coder Templates to provision development workspaces.
